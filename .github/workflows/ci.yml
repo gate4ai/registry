@@ -1,0 +1,20 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+      - run: go install github.com/gate4ai/gate4ai/cmd/gate4ai@latest
+      # Структура индекса; подпись проверяется на main (после подписи владельцем registry).
+      - run: gate4ai registry check index.json
+      - if: github.ref == 'refs/heads/main'
+        run: gate4ai registry check index.json --key "${{ vars.REGISTRY_PUBLIC_KEY }}"

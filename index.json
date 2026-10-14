@@ -1,6 +1,72 @@
 {
   "version": 1,
-  "publishers": {},
-  "connectors": {},
+  "updated": "2026-10-14",
+  "publishers": {
+    "gate4ai": {
+      "keys": [
+        "ed25519:jDMGJWFzQif0EgifZGdqGlW1P0IvOy6RaHwpg6frxcA="
+      ],
+      "trust": "verified"
+    }
+  },
+  "connectors": {
+    "email": {
+      "publisher": "gate4ai",
+      "repo": "https://github.com/gate4ai/gate4ai-mail",
+      "license": "AGPL-3.0-only WITH gate4ai host exception",
+      "description": "Email over IMAP/SMTP",
+      "versions": [
+        {
+          "version": "2",
+          "url": "https://github.com/gate4ai/gate4ai-mail/releases/download/v2/email-2.g4c",
+          "sha256": "f744b29c674937468f8c4a76f14db6f5de18c2c89ab949489f1c3929fd5b1116",
+          "digest": "b7341883bce6ea245d4a158248e042cd799ba2cdb386ea1e960b912042c33865",
+          "capabilities": [
+            "network tcp://${setting:imap.host}:${setting:imap.port}",
+            "network tcp://${setting:smtp.host}:${setting:smtp.port}",
+            "network tls://${setting:imap.host}:${setting:imap.port}",
+            "network tls://${setting:smtp.host}:${setting:smtp.port}",
+            "secret ${setting:imap.password} for ${setting:imap.host}",
+            "secret ${setting:imap.password} for ${setting:smtp.host}",
+            "secret ${setting:smtp.password} for ${setting:smtp.host}"
+          ]
+        }
+      ]
+    },
+    "files": {
+      "publisher": "gate4ai",
+      "repo": "https://github.com/gate4ai/gate4ai-files",
+      "license": "AGPL-3.0-only WITH gate4ai host exception",
+      "description": "Files in allowed folders",
+      "versions": [
+        {
+          "version": "2",
+          "url": "https://github.com/gate4ai/gate4ai-files/releases/download/v2/files-2.g4c",
+          "sha256": "b2ee432c3207a1dd3d513f22228d7000cc7eda5b6239dcbbc6eb20fc75db18c8",
+          "digest": "e6bded6bfd15f938c18fc9cc31954a5b1a6e102b43b19c4826261ebd7c40d0c4",
+          "capabilities": [
+            "files ${setting:roots}/**"
+          ]
+        }
+      ]
+    },
+    "browser": {
+      "publisher": "gate4ai",
+      "repo": "https://github.com/gate4ai/gate4ai-browser",
+      "license": "AGPL-3.0-only WITH gate4ai host exception",
+      "description": "Read pages in the user's dedicated Chrome profile",
+      "versions": [
+        {
+          "version": "2",
+          "url": "https://github.com/gate4ai/gate4ai-browser/releases/download/v2/browser-2.g4c",
+          "sha256": "14698938e484e859b0015e99d4660e53dacf9c728bb6e894aaef733913cb3dc4",
+          "digest": "0c0a04f8d7292b1729ad5df745a79fa691323cca6116c1965c3dabfbba286918",
+          "capabilities": [
+            "browser on ${setting:allowed_domains}"
+          ]
+        }
+      ]
+    }
+  },
   "revoked": []
 }

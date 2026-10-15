@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-10-14",
+  "updated": "2026-10-15",
   "publishers": {
     "gate4ai": {
       "keys": [
@@ -10,6 +10,23 @@
     }
   },
   "connectors": {
+    "browser": {
+      "publisher": "gate4ai",
+      "repo": "https://github.com/gate4ai/gate4ai-browser",
+      "license": "AGPL-3.0-only WITH gate4ai host exception",
+      "description": "Read pages in the user's dedicated Chrome profile",
+      "versions": [
+        {
+          "version": "4",
+          "url": "https://github.com/gate4ai/gate4ai-browser/releases/download/v4/browser-4.g4c",
+          "sha256": "9b8e7e5b9ecdb0f878d15f67416e5731f091e9db9d294cc98f7cf0a2d8ca9d78",
+          "digest": "290c0341e4c50ed7c36d4952ae7daf0300e576462bc224fd1eb5e6e4ecc4c19b",
+          "capabilities": [
+            "browser on ${setting:allowed_domains}"
+          ]
+        }
+      ]
+    },
     "email": {
       "publisher": "gate4ai",
       "repo": "https://github.com/gate4ai/gate4ai-mail",
@@ -17,10 +34,10 @@
       "description": "Email over IMAP/SMTP",
       "versions": [
         {
-          "version": "2",
-          "url": "https://github.com/gate4ai/gate4ai-mail/releases/download/v2/email-2.g4c",
-          "sha256": "f744b29c674937468f8c4a76f14db6f5de18c2c89ab949489f1c3929fd5b1116",
-          "digest": "b7341883bce6ea245d4a158248e042cd799ba2cdb386ea1e960b912042c33865",
+          "version": "4",
+          "url": "https://github.com/gate4ai/gate4ai-mail/releases/download/v4/email-4.g4c",
+          "sha256": "e0d0d2988fb8f6636ec0e7ce135da9ee892980923d3bf9385906ce8e0abeb855",
+          "digest": "1bb0fb35c67984616ef3f30c9137e8515ea457a0b0533ed9bd1c36a599e78038",
           "capabilities": [
             "network tcp://${setting:imap.host}:${setting:imap.port}",
             "network tcp://${setting:smtp.host}:${setting:smtp.port}",
@@ -40,33 +57,15 @@
       "description": "Files in allowed folders",
       "versions": [
         {
-          "version": "2",
-          "url": "https://github.com/gate4ai/gate4ai-files/releases/download/v2/files-2.g4c",
-          "sha256": "b2ee432c3207a1dd3d513f22228d7000cc7eda5b6239dcbbc6eb20fc75db18c8",
-          "digest": "e6bded6bfd15f938c18fc9cc31954a5b1a6e102b43b19c4826261ebd7c40d0c4",
+          "version": "4",
+          "url": "https://github.com/gate4ai/gate4ai-files/releases/download/v4/files-4.g4c",
+          "sha256": "ffc73d0b763f9228b829e2fd584c6f5c49d047025d12344c823830b8ced765e9",
+          "digest": "c7158e6c194dd88b1da5e0efb0970a44bd4fa2f95087a8a7cf27260c61186d82",
           "capabilities": [
             "files ${setting:roots}/**"
           ]
         }
       ]
-    },
-    "browser": {
-      "publisher": "gate4ai",
-      "repo": "https://github.com/gate4ai/gate4ai-browser",
-      "license": "AGPL-3.0-only WITH gate4ai host exception",
-      "description": "Read pages in the user's dedicated Chrome profile",
-      "versions": [
-        {
-          "version": "2",
-          "url": "https://github.com/gate4ai/gate4ai-browser/releases/download/v2/browser-2.g4c",
-          "sha256": "14698938e484e859b0015e99d4660e53dacf9c728bb6e894aaef733913cb3dc4",
-          "digest": "0c0a04f8d7292b1729ad5df745a79fa691323cca6116c1965c3dabfbba286918",
-          "capabilities": [
-            "browser on ${setting:allowed_domains}"
-          ]
-        }
-      ]
     }
-  },
-  "revoked": []
+  }
 }

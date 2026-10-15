@@ -43,10 +43,7 @@
 
 ## Публикация версии коннектора
 
-1. Издатель собирает и подписывает пакет в CI репозитория коннектора: `gate4ai connectors pack . --key "$PUBLISHER_KEY" -o <name>-<version>.g4c` и прикладывает его к релизу.
-2. Pull request в этот репозиторий добавляет версию в `index.json` (`url`, `sha256`, `digest`, `capabilities` — из вывода `pack`).
-3. Ревью: код, возможности (изменились ли по сравнению с прошлой версией, нет ли подозрительных доменов, у `money` — независимая проверка другим коннектором).
-4. После слияния владелец registry подписывает индекс: `gate4ai registry sign index.json --key registry.key`; CI проверяет: `gate4ai registry check index.json --key ed25519:<ключ registry>`.
+Порядок для издателей (ключ, релиз, `gate4ai registry add`, pull request, ревью, уровни доверия) — в [CONTRIBUTING.md](CONTRIBUTING.md). CI pull request'а скачивает каждый пакет и сверяет с записью, а новые версии пересобирает из исходников; после слияния владелец registry подписывает индекс.
 
 ## Лицензия
 

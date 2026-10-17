@@ -24,6 +24,15 @@
           "capabilities": [
             "browser on ${setting:allowed_domains}"
           ]
+        },
+        {
+          "version": "5",
+          "url": "https://github.com/gate4ai/gate4ai-browser/releases/download/v5/browser-5.g4c",
+          "sha256": "4314ac38f8374b9b70ab513e0065020060efb0645e87d9487fddf9fa29aaea3b",
+          "digest": "a8d3b61dfa1fe471b03d9da80939b6193379299527a352402706cb0d05a588ab",
+          "capabilities": [
+            "browser on ${setting:allowed_domains}"
+          ]
         }
       ]
     },
@@ -38,6 +47,21 @@
           "url": "https://github.com/gate4ai/gate4ai-mail/releases/download/v4/email-4.g4c",
           "sha256": "e0d0d2988fb8f6636ec0e7ce135da9ee892980923d3bf9385906ce8e0abeb855",
           "digest": "1bb0fb35c67984616ef3f30c9137e8515ea457a0b0533ed9bd1c36a599e78038",
+          "capabilities": [
+            "network tcp://${setting:imap.host}:${setting:imap.port}",
+            "network tcp://${setting:smtp.host}:${setting:smtp.port}",
+            "network tls://${setting:imap.host}:${setting:imap.port}",
+            "network tls://${setting:smtp.host}:${setting:smtp.port}",
+            "secret ${setting:imap.password} for ${setting:imap.host}",
+            "secret ${setting:imap.password} for ${setting:smtp.host}",
+            "secret ${setting:smtp.password} for ${setting:smtp.host}"
+          ]
+        },
+        {
+          "version": "5",
+          "url": "https://github.com/gate4ai/gate4ai-mail/releases/download/v5/email-5.g4c",
+          "sha256": "60ec49f71900360344a5db71d43258f940d0610a6911bd2dbda997f1f1b9aa76",
+          "digest": "e3423029fc78fd56debe5f3021b9112d3c0b51bad1fe270a1f29609349430ae1",
           "capabilities": [
             "network tcp://${setting:imap.host}:${setting:imap.port}",
             "network tcp://${setting:smtp.host}:${setting:smtp.port}",

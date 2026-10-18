@@ -104,6 +104,21 @@
             "secret ${setting:imap.password} for ${setting:smtp.host}",
             "secret ${setting:smtp.password} for ${setting:smtp.host}"
           ]
+        },
+        {
+          "version": "7",
+          "url": "https://github.com/gate4ai/gate4ai-mail/releases/download/v7/email-7.g4c",
+          "sha256": "c1ff10006ce313021d1a64499667ed660e92771c482779acc24505140202ce40",
+          "digest": "7f85142c5c5ee10eaae14c0e88e7a1a75377c37759a44cc75956a21225d0c888",
+          "capabilities": [
+            "network tcp://${setting:imap.host}:${setting:imap.port}",
+            "network tcp://${setting:smtp.host}:${setting:smtp.port}",
+            "network tls://${setting:imap.host}:${setting:imap.port}",
+            "network tls://${setting:smtp.host}:${setting:smtp.port}",
+            "secret ${setting:imap.password} for ${setting:imap.host}",
+            "secret ${setting:imap.password} for ${setting:smtp.host}",
+            "secret ${setting:smtp.password} for ${setting:smtp.host}"
+          ]
         }
       ]
     }

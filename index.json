@@ -51,6 +51,15 @@
           "capabilities": [
             "reveal the value of ${setting:model_key} to the connector"
           ]
+        },
+        {
+          "version": "8",
+          "url": "https://github.com/gate4ai/gate4ai-browser/releases/download/v8/browser-8.platforms.json",
+          "sha256": "357f58952148bc176d6b1c73177774ad555a8b24c47407f04b02becb45809bf7",
+          "digest": "809b2a1adfa35a49a7c502ca6330984d1d8d1bf5e50232afe12224afb5938850",
+          "capabilities": [
+            "reveal the value of ${setting:model_key} to the connector"
+          ]
         }
       ]
     },

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-10-15",
+  "updated": "2026-10-18",
   "publishers": {
     "gate4ai": {
       "keys": [
@@ -103,23 +103,6 @@
             "secret ${setting:imap.password} for ${setting:imap.host}",
             "secret ${setting:imap.password} for ${setting:smtp.host}",
             "secret ${setting:smtp.password} for ${setting:smtp.host}"
-          ]
-        }
-      ]
-    },
-    "files": {
-      "publisher": "gate4ai",
-      "repo": "https://github.com/gate4ai/gate4ai-files",
-      "license": "AGPL-3.0-only WITH gate4ai host exception",
-      "description": "Files in allowed folders",
-      "versions": [
-        {
-          "version": "4",
-          "url": "https://github.com/gate4ai/gate4ai-files/releases/download/v4/files-4.g4c",
-          "sha256": "ffc73d0b763f9228b829e2fd584c6f5c49d047025d12344c823830b8ced765e9",
-          "digest": "c7158e6c194dd88b1da5e0efb0970a44bd4fa2f95087a8a7cf27260c61186d82",
-          "capabilities": [
-            "files ${setting:roots}/**"
           ]
         }
       ]

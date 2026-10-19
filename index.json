@@ -60,6 +60,15 @@
           "capabilities": [
             "reveal the value of ${setting:model_key} to the connector"
           ]
+        },
+        {
+          "version": "10",
+          "url": "https://github.com/gate4ai/gate4ai-browser/releases/download/v10/browser-10.platforms.json",
+          "sha256": "18fba628a8985cc4fa0162dc9696e08cca4e6e0bbb0a71a75f9f2addc8335b1d",
+          "digest": "f201ef76b5b687a3f9baae8bcbecb5dac16f9a1bb06e6fffdc210c0e4234a6ba",
+          "capabilities": [
+            "reveal the value of ${setting:model_key} to the connector"
+          ]
         }
       ]
     },

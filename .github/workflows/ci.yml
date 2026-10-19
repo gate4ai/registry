@@ -24,7 +24,7 @@ jobs:
             ~/.cache/go-build
           key: go-${{ runner.os }}-check-${{ github.run_id }}
           restore-keys: go-${{ runner.os }}-check-
-      - run: GOPROXY=direct go install github.com/gate4ai/gate4ai/cmd/gate4ai@main # прокси кэширует @main
+      - run: GOPRIVATE=github.com/gate4ai/* go install github.com/gate4ai/gate4ai/cmd/gate4ai@main # мимо прокси (кэширует @main) и sum.golang.org (не знает свежий коммит)
       # Структура индекса; каждый пакет скачивается и сверяется с записью:
       # sha256, дайджест, подпись ключом издателя, возможности.
       - run: gate4ai registry check index.json --fetch

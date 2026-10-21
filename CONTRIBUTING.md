@@ -29,10 +29,12 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      # Сторонние actions — по полному SHA (тег — в комментарии), gate4ai — конкретной версии:
+      # пакет пересобирается из тега той же версией, иначе байты могут не совпасть.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with: { go-version-file: go.mod }
-      - run: go install github.com/gate4ai/gate4ai/cmd/gate4ai@latest
+      - run: go install github.com/gate4ai/gate4ai/cmd/gate4ai@v0.7.2
       - env: { PUBLISHER_KEY: "${{ secrets.GATE4AI_PUBLISHER_KEY }}" }
         run: |
           umask 077; printf '%s\n' "$PUBLISHER_KEY" > "$RUNNER_TEMP/publisher.key"
@@ -59,7 +61,7 @@ gate4ai registry add index.json pack.json --publisher acme \
 
 `--repo`, `--path` (каталог коннектора, если не корень), `--license` и `--description` нужны только для нового коннектора; адрес пакета по умолчанию — релиз `v<version>` на GitHub (иначе `--url`). Новый издатель попадает в индекс с уровнем `community` и ключом, которым подписан пакет. `index.json.sig` не меняйте.
 
-CI pull request'а скачивает каждый пакет и сверяет его с записью, а новые версии пересобирает из тега `v<version>` (в каталоге `path`) и сравнивает с опубликованным пакетом. У нативного пакета запись ссылается на список платформ `<connector>-<version>.platforms.json`, и CI пересобирает пакет под каждую платформу списка.
+CI pull request'а скачивает каждый пакет и сверяет его с записью, а новые версии пересобирает из тега `v<version>` (в каталоге `path`) и сравнивает с опубликованным пакетом. CI работает той версией gate4ai, что записана в `.github/gate4ai-version` (её обновляет релиз gate4ai), а не `@latest`; соберите пакет той же или совместимой версией. Ещё CI проверяет, что в индексе есть официальные коннекторы gate4ai (`email`, `browser`) с версией этого релиза. У нативного пакета запись ссылается на список платформ `<connector>-<version>.platforms.json`, и CI пересобирает пакет под каждую платформу списка.
 
 ## 5. Ревью и уровни доверия
 

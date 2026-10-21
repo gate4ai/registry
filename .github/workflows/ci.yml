@@ -15,8 +15,8 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: stable
-          cache: false # go.sum нет: gate4ai@main ставится ниже
-      # Кэш Go для go install gate4ai@main: ключ — запуск (main меняется), берётся последний.
+          cache: false # go.sum нет: gate4ai@latest ставится ниже
+      # Кэш Go для go install gate4ai@latest: ключ — запуск (версия меняется), берётся последний.
       - uses: actions/cache@v4
         with:
           path: |
@@ -24,7 +24,8 @@ jobs:
             ~/.cache/go-build
           key: go-${{ runner.os }}-check-${{ github.run_id }}
           restore-keys: go-${{ runner.os }}-check-
-      - run: GOPRIVATE=github.com/gate4ai/* go install github.com/gate4ai/gate4ai/cmd/gate4ai@main # мимо прокси (кэширует @main) и sum.golang.org (не знает свежий коммит)
+      # GOPRIVATE: мимо прокси (кэширует @latest) и sum.golang.org (свежий тег знает не сразу).
+      - run: GOPRIVATE=github.com/gate4ai/* go install github.com/gate4ai/gate4ai/cmd/gate4ai@latest
       # Структура индекса; каждый пакет скачивается и сверяется с записью:
       # sha256, дайджест, подпись ключом издателя, возможности.
       - run: gate4ai registry check index.json --fetch
@@ -32,18 +33,19 @@ jobs:
       - if: github.ref == 'refs/heads/main'
         run: gate4ai registry check index.json --key "${{ vars.REGISTRY_PUBLIC_KEY }}"
       # Новые версии в pull request пересобираются из исходников по тегу
-      # v<version> в repo коннектора и должны совпасть с опубликованным пакетом.
+      # v<version> в repo коннектора (каталог path, пусто — корень) и должны
+      # совпасть с опубликованным пакетом.
       - if: github.event_name == 'pull_request'
         name: rebuild new versions from source
         run: |
           set -euo pipefail
           git show "origin/${{ github.base_ref }}:index.json" > base.json
-          q='[.connectors | to_entries[] | .key as $c | .value.repo as $r | .value.versions[] | {c: $c, r: $r, v: .version, u: .url}]'
+          q='[.connectors | to_entries[] | .key as $c | .value.repo as $r | (.value.path // "") as $p | .value.versions[] | {c: $c, r: $r, p: $p, v: .version, u: .url}]'
           jq -c --slurpfile base base.json "$q - (\$base[0] | $q) | .[]" index.json | while read -r x; do
-            c=$(jq -r .c <<<"$x"); r=$(jq -r .r <<<"$x"); v=$(jq -r .v <<<"$x"); u=$(jq -r .u <<<"$x")
-            echo "== $c $v from $r (tag v$v)"
+            c=$(jq -r .c <<<"$x"); r=$(jq -r .r <<<"$x"); p=$(jq -r .p <<<"$x"); v=$(jq -r .v <<<"$x"); u=$(jq -r .u <<<"$x")
+            echo "== $c $v from $r${p:+/$p} (tag v$v)"
             rm -rf src
             git -c advice.detachedHead=false clone --quiet --depth 1 --branch "v$v" "$r" src
             # пакет WASM или список платформ нативного (.platforms.json) — по адресу
-            gate4ai connectors verify src "$u"
+            gate4ai connectors verify "src/$p" "$u"
           done

@@ -13,13 +13,14 @@
   "connectors": {
     "email": {
       "publisher": "gate4ai",
-      "repo": "https://github.com/gate4ai/gate4ai-mail",
-      "license": "AGPL-3.0-only WITH gate4ai host exception",
+      "repo": "https://github.com/gate4ai/gate4ai",
+      "path": "connectors/mail",
+      "license": "AGPL-3.0-only",
       "description": "Email over IMAP/SMTP",
       "versions": [
         {
-          "version": "2",
-          "url": "https://github.com/gate4ai/gate4ai-mail/releases/download/v2/email-2.g4c",
+          "version": "0.7.0",
+          "url": "https://github.com/gate4ai/gate4ai/releases/download/v0.7.0/email-0.7.0.g4c",
           "sha256": "<sha256 файла пакета>",
           "digest": "<дайджест пакета, подписанный издателем>",
           "capabilities": ["network tls://${setting:imap.host}:${setting:imap.port}", "…"]
@@ -28,7 +29,7 @@
     }
   },
   "revoked": [
-    { "connector": "email", "version": "1", "reason": "…" }
+    { "connector": "email", "version": "0.6.9", "reason": "…" }
   ]
 }
 ```
@@ -36,14 +37,15 @@
 | Поле | Смысл |
 |---|---|
 | `publishers.*.trust` | `verified` — проверен gate4.ai (ревью кода и возможностей); `publisher` — проверенный издатель; `community` — сообщество (предупреждение, доступны только действия `read`) |
-| `connectors.*.repo` | исходник обязателен: пакет должен воспроизводимо собираться из него |
+| `connectors.*.repo` | исходник обязателен: пакет должен воспроизводимо собираться из него по тегу `v<version>` |
+| `connectors.*.path` | каталог коннектора в `repo`, если он не в корне (официальные коннекторы — в `connectors/<имя>` репозитория `gate4ai/gate4ai`) |
 | `versions[].capabilities` | возможности, которые прошли ревью; пакет с другими возможностями не установится |
 | `versions[].sha256` / `digest` | хэш файла пакета и подписанный издателем дайджест (`gate4ai connectors pack` печатает оба) |
 | `revoked` | отозванные версии (`"version": "*"` — все); хост отключает их у всех, кто обновил индекс |
 
 ## Публикация версии коннектора
 
-Порядок для издателей (ключ, релиз, `gate4ai registry add`, pull request, ревью, уровни доверия) — в [CONTRIBUTING.md](CONTRIBUTING.md). CI pull request'а скачивает каждый пакет и сверяет с записью, а новые версии пересобирает из исходников; после слияния владелец registry подписывает индекс.
+Официальные коннекторы выпускаются вместе с gate4ai: один тег — один релиз, и все их версии попадают сюда одним pull request. Порядок для сторонних издателей (ключ, релиз, `gate4ai registry add`, pull request, ревью, уровни доверия) — в [CONTRIBUTING.md](CONTRIBUTING.md). CI pull request'а скачивает каждый пакет и сверяет с записью, а новые версии пересобирает из исходников; после слияния владелец registry подписывает индекс.
 
 ## Лицензия
 

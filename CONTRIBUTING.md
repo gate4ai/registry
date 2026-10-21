@@ -4,10 +4,10 @@
 
 ## 1. Коннектор
 
-- Пишется на [sdk-go](https://github.com/gate4ai/sdk-go) и собирается в WASM-модуль; образец — [gate4ai-mail](https://github.com/gate4ai/gate4ai-mail) (код, `manifest.yaml`, тесты на фейковом хосте `hosttest`).
-- Нативные пакеты (`runtime: native`: отдельный процесс без песочницы, с правами пользователя) магазин пока принимает только от gate4.ai. Если вы хотите создать такой пакет, свяжитесь с нами — мы к этому благосклонны. WASM-коннектор может пользоваться нативными через `service_call` (например, браузером — [gate4ai-browser](https://github.com/gate4ai/gate4ai-browser)).
+- Пишется на [sdk-go](https://github.com/gate4ai/gate4ai/tree/main/sdk-go) (`require github.com/gate4ai/gate4ai`, импорт `github.com/gate4ai/gate4ai/sdk-go/...`) и собирается в WASM-модуль; заготовка — `gate4ai connectors new`, образец — [connectors/mail](https://github.com/gate4ai/gate4ai/tree/main/connectors/mail) (код, `manifest.yaml`, тесты на фейковом хосте `hosttest`).
+- Нативные пакеты (`runtime: native`: отдельный процесс без песочницы, с правами пользователя) магазин пока принимает только от gate4.ai. Если вы хотите создать такой пакет, свяжитесь с нами — мы к этому благосклонны. WASM-коннектор может пользоваться нативными через `service_call` (например, браузером — [connectors/browser](https://github.com/gate4ai/gate4ai/tree/main/connectors/browser)).
 - Исходники открыты, лицензия совместима с AGPL-3.0 (рекомендуем AGPL-3.0, как у коннекторов gate4ai, или пермиссивную).
-- Имя репозитория — `gate4ai-<имя>`; `version` в `manifest.yaml` растёт с каждым выпуском, тег — `v<version>`.
+- Имя репозитория — `gate4ai-<имя>` (коннектор в корне или в каталоге — тогда `--path`); `version` в `manifest.yaml` растёт с каждым выпуском, тег — `v<version>`.
 - Возможности в манифесте — минимально нужные: каждую увидит владелец при установке и ревьюер в pull request.
 
 ## 2. Ключ издателя
@@ -20,7 +20,26 @@ gate4ai connectors keygen -o publisher.key   # печатает открытый
 
 ## 3. Релиз
 
-Скопируйте [workflow из gate4ai-mail](https://github.com/gate4ai/gate4ai-mail/blob/main/.github/workflows/ci.yml): на тег `v*` он собирает модуль, подписывает пакет и создаёт релиз с `<connector>-<version>.g4c` и `pack.json`.
+Workflow на тег `v*` собирает модуль, подписывает пакет и создаёт релиз с `<connector>-<version>.g4c` и `pack.json`:
+
+```yaml
+on: { push: { tags: ["v*"] } }
+permissions: { contents: write }
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: { go-version-file: go.mod }
+      - run: go install github.com/gate4ai/gate4ai/cmd/gate4ai@latest
+      - env: { PUBLISHER_KEY: "${{ secrets.GATE4AI_PUBLISHER_KEY }}" }
+        run: |
+          umask 077; printf '%s\n' "$PUBLISHER_KEY" > "$RUNNER_TEMP/publisher.key"
+          gate4ai connectors pack . --key "$RUNNER_TEMP/publisher.key" | tee pack.json
+      - run: gh release create "$GITHUB_REF_NAME" *.g4c pack.json --generate-notes
+        env: { GH_TOKEN: "${{ github.token }}" }
+```
 
 Сборка воспроизводима: `pack` собирает Go из `go.mod` (`toolchain`, иначе `go`) без сведений о git, поэтому любой может пересобрать пакет из тега и получить те же байты:
 
@@ -38,9 +57,9 @@ gate4ai registry add index.json pack.json --publisher acme \
   --repo https://github.com/acme/gate4ai-hello --license AGPL-3.0-only --description "…"
 ```
 
-`--repo`, `--license` и `--description` нужны только для нового коннектора; адрес пакета по умолчанию — релиз `v<version>` на GitHub (иначе `--url`). Новый издатель попадает в индекс с уровнем `community` и ключом, которым подписан пакет. `index.json.sig` не меняйте.
+`--repo`, `--path` (каталог коннектора, если не корень), `--license` и `--description` нужны только для нового коннектора; адрес пакета по умолчанию — релиз `v<version>` на GitHub (иначе `--url`). Новый издатель попадает в индекс с уровнем `community` и ключом, которым подписан пакет. `index.json.sig` не меняйте.
 
-CI pull request'а скачивает каждый пакет и сверяет его с записью, а новые версии пересобирает из тега `v<version>` и сравнивает с опубликованным пакетом. У нативного пакета запись ссылается на список платформ `<connector>-<version>.platforms.json`, и CI пересобирает пакет под каждую платформу списка.
+CI pull request'а скачивает каждый пакет и сверяет его с записью, а новые версии пересобирает из тега `v<version>` (в каталоге `path`) и сравнивает с опубликованным пакетом. У нативного пакета запись ссылается на список платформ `<connector>-<version>.platforms.json`, и CI пересобирает пакет под каждую платформу списка.
 
 ## 5. Ревью и уровни доверия
 

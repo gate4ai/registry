@@ -9,23 +9,30 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-      - uses: actions/setup-go@v7
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version: stable
-          cache: false # go.sum нет: gate4ai@latest ставится ниже
-      # Кэш Go для go install gate4ai@latest: ключ — запуск (версия меняется), берётся последний.
-      - uses: actions/cache@v6
+          cache: false # go.sum нет: gate4ai ставится ниже
+      # Версия gate4ai — закреплена в .github/gate4ai-version (её меняет PR релиза gate4ai,
+      # dev/scripts/deploy.sh registry): проверка и пересборка пакетов не зависят от того,
+      # какой gate4ai окажется последним в момент запуска.
+      - id: gate4ai
+        run: |
+          v=$(tr -d '[:space:]' < .github/gate4ai-version)
+          [[ $v =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error file=.github/gate4ai-version::not vX.Y.Z: '$v'"; exit 1; }
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
             ~/go/pkg/mod
             ~/.cache/go-build
-          key: go-${{ runner.os }}-check-${{ github.run_id }}
+          key: go-${{ runner.os }}-check-${{ steps.gate4ai.outputs.version }}
           restore-keys: go-${{ runner.os }}-check-
-      # GOPRIVATE: мимо прокси (кэширует @latest) и sum.golang.org (свежий тег знает не сразу).
-      - run: GOPRIVATE=github.com/gate4ai/* go install github.com/gate4ai/gate4ai/cmd/gate4ai@latest
+      # GOPRIVATE: мимо прокси и sum.golang.org (свежий тег они знают не сразу).
+      - run: GOPRIVATE='github.com/gate4ai/*' go install "github.com/gate4ai/gate4ai/cmd/gate4ai@${{ steps.gate4ai.outputs.version }}"
       # Структура индекса; каждый пакет скачивается и сверяется с записью:
       # sha256, дайджест, подпись ключом издателя, возможности.
       - run: gate4ai registry check index.json --fetch
@@ -49,3 +56,28 @@ jobs:
             # пакет WASM или список платформ нативного (.platforms.json) — по адресу
             gate4ai connectors verify "src/$p" "$u"
           done
+      # Официальные коннекторы gate4ai (email, browser) должны быть в индексе с версией
+      # закреплённого релиза: пустой или отставший индекс — ошибка, а не тихий пустой магазин
+      # (у пользователей не работают connectors install email и автоустановка browser).
+      # Вышедший позже релиз gate4ai, ещё не записанный сюда, — предупреждение. Шаг последний:
+      # остальные проверки индекса идут и при его ошибке.
+      - name: official connectors
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PIN: ${{ steps.gate4ai.outputs.version }}
+        run: |
+          bad=0
+          for c in email browser; do
+            if ! jq -e --arg c "$c" '.connectors[$c].publisher == "gate4ai"' index.json >/dev/null; then
+              echo "::error file=index.json::official connector $c is not in the index: run dev/scripts/deploy.sh registry"
+              bad=1
+            elif ! jq -e --arg c "$c" --arg v "${PIN#v}" '[.connectors[$c].versions[]? | select(.version == $v)] | length > 0' index.json >/dev/null; then
+              echo "::error file=index.json::$c ${PIN#v} (gate4ai $PIN, .github/gate4ai-version) is not in the index"
+              bad=1
+            fi
+          done
+          latest=$(gh release view -R gate4ai/gate4ai --json tagName -q .tagName 2>/dev/null || true)
+          if [ -n "$latest" ] && [ "$latest" != "$PIN" ]; then
+            echo "::warning::gate4ai $latest is released, the registry is at $PIN: run dev/scripts/deploy.sh registry"
+          fi
+          exit $bad

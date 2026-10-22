@@ -25,6 +25,18 @@
           "capabilities": [
             "reveal the value of ${setting:model_key} to the connector"
           ]
+        },
+        {
+          "version": "0.7.4",
+          "url": "https://github.com/gate4ai/gate4ai/releases/download/v0.7.4/browser-0.7.4.platforms.json",
+          "sha256": "da6217074531c997cae60965c963614b6a0aae187e6d14b52571985e0211371f",
+          "digest": "2b1aebfc5a4d06e96f9757ea03e67d9944be24e07e9a5f503ddd9f9b7a7bea8b",
+          "capabilities": [
+            "a call may run up to 120 s",
+            "class write actions: act, fill_secret, login",
+            "reveal the value of ${setting:model_key} to the connector",
+            "runs as a separate program without a sandbox, with your user's rights"
+          ]
         }
       ]
     },
@@ -41,6 +53,23 @@
           "sha256": "89492bbf49a1afa4cbd2823844e1aa9dc09c2e0083891a0f503337e159f7d913",
           "digest": "4c6f215bf4c9edf3950db7ce4bcecf97d916d768fee49e1f47f32e2279843598",
           "capabilities": [
+            "network tcp://${setting:imap.host}:${setting:imap.port}",
+            "network tcp://${setting:smtp.host}:${setting:smtp.port}",
+            "network tls://${setting:imap.host}:${setting:imap.port}",
+            "network tls://${setting:smtp.host}:${setting:smtp.port}",
+            "secret ${setting:imap.password} for ${setting:imap.host}",
+            "secret ${setting:imap.password} for ${setting:smtp.host}",
+            "secret ${setting:smtp.password} for ${setting:smtp.host}"
+          ]
+        },
+        {
+          "version": "0.7.4",
+          "url": "https://github.com/gate4ai/gate4ai/releases/download/v0.7.4/email-0.7.4.g4c",
+          "sha256": "79937157e7807c84378b3814f150b81fdffae8f3dc9ea26304cff494e83d90d3",
+          "digest": "f2648aba8df1aba9764c19bc69ec32eeedc3470d6d04d1b349645cbc4805dc1e",
+          "capabilities": [
+            "class external actions: send",
+            "class write actions: draft",
             "network tcp://${setting:imap.host}:${setting:imap.port}",
             "network tcp://${setting:smtp.host}:${setting:smtp.port}",
             "network tls://${setting:imap.host}:${setting:imap.port}",

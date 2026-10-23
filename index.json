@@ -40,6 +40,18 @@
             "reveal the value of ${setting:model_key} to the connector",
             "runs as a separate program without a sandbox, with your user's rights"
           ]
+        },
+        {
+          "version": "0.7.6",
+          "url": "https://github.com/gate4ai/gate4ai/releases/download/v0.7.6/browser-0.7.6.platforms.json",
+          "sha256": "ff4f767bc7f15f9fe42e164be29a43a121763786e4966c6d7c10c90e8c60fec9",
+          "digest": "bcf8fc969e78a203dd1dc7744d3cd74a609833618def85185829406329e66bc6",
+          "capabilities": [
+            "a call may run up to 600 s",
+            "class write actions: act, delete, fill_secret, login, patch, post, put",
+            "reveal the value of ${setting:model_key} to the connector",
+            "runs as a separate program without a sandbox, with your user's rights"
+          ]
         }
       ]
     },
@@ -72,6 +84,23 @@
           "url": "https://github.com/gate4ai/gate4ai/releases/download/v0.7.5/email-0.7.5.g4c",
           "sha256": "8176a1036c37aa51a3da77f4c51ef904215abaf7676a19665d8e47cc2e3d6f3a",
           "digest": "64edae6f60e4f5d833c1afb9cb6a6ef0dc74618368bbbf70134cdbce8a46aff0",
+          "capabilities": [
+            "class external actions: send",
+            "class write actions: draft",
+            "network tcp://${setting:imap.host}:${setting:imap.port}",
+            "network tcp://${setting:smtp.host}:${setting:smtp.port}",
+            "network tls://${setting:imap.host}:${setting:imap.port}",
+            "network tls://${setting:smtp.host}:${setting:smtp.port}",
+            "secret ${setting:imap.password} for ${setting:imap.host}",
+            "secret ${setting:imap.password} for ${setting:smtp.host}",
+            "secret ${setting:smtp.password} for ${setting:smtp.host}"
+          ]
+        },
+        {
+          "version": "0.7.6",
+          "url": "https://github.com/gate4ai/gate4ai/releases/download/v0.7.6/email-0.7.6.g4c",
+          "sha256": "3346dab55d4a074bf1f1ddd6294b33dfca31ba44da3e6b7e2c932217828a95aa",
+          "digest": "dddd26f43e78bffcf39e1cc8ddf515f0046c007a33ca30686b27abf840c3c2b7",
           "capabilities": [
             "class external actions: send",
             "class write actions: draft",

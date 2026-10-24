@@ -19,14 +19,14 @@
       "publisher": "acme",
       "repo": "https://github.com/acme/gate4ai-utilities",
       "license": "AGPL-3.0-only",
-      "description": "Pays utility bills in the personal account on lk.example.org",
+      "description": "Pays utility bills in the personal account on account.example.org",
       "versions": [
         {
           "version": "1",
           "url": "https://github.com/acme/gate4ai-utilities/releases/download/v1/utilities-1.g4c",
           "sha256": "<sha256 файла пакета>",
           "digest": "<дайджест пакета, подписанный издателем>",
-          "capabilities": ["call browser (contract 1): act, observe, open", "site lk.example.org: allow", "…"]
+          "capabilities": ["call browser (contract 1): act, observe, open", "site account.example.org: allow", "…"]
         }
       ]
     }

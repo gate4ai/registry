@@ -4,9 +4,9 @@
 
 ## 1. Коннектор
 
-- Пишется на [sdk-go](https://github.com/gate4ai/gate4ai/tree/main/sdk-go) (`require github.com/gate4ai/gate4ai`, импорт `github.com/gate4ai/gate4ai/sdk-go/...`) и собирается в WASM-модуль; заготовка — `gate4ai connectors new`, образец — [connectors/mail](https://github.com/gate4ai/gate4ai/tree/main/connectors/mail) (код, `manifest.yaml`, тесты на фейковом хосте `hosttest`).
-- Нативные пакеты (`runtime: native`: отдельный процесс без песочницы, с правами пользователя) магазин пока принимает только от gate4.ai. Если вы хотите создать такой пакет, свяжитесь с нами — мы к этому благосклонны. WASM-коннектор может пользоваться нативными через `service_call` (например, браузером — [connectors/browser](https://github.com/gate4ai/gate4ai/tree/main/connectors/browser)).
-- Исходники открыты, лицензия совместима с AGPL-3.0 (рекомендуем AGPL-3.0, как у коннекторов gate4ai, или пермиссивную).
+- Пишется на [sdk-go](https://github.com/gate4ai/gate4ai/tree/main/sdk-go) (`require github.com/gate4ai/gate4ai`, импорт `github.com/gate4ai/gate4ai/sdk-go/...`) и собирается в WASM-модуль (`runtime: wasm` — единственный runtime магазина). Заготовка — `gate4ai connectors new <имя> --site <домен>` (манифест, код и тесты на фейковом хосте `hosttest`), образец — [e2e/testdata/pagereader](https://github.com/gate4ai/gate4ai/tree/main/e2e/testdata/pagereader) в репозитории gate4ai.
+- У коннектора нет своей сети. На сайты он ходит только через встроенный в gate4ai Браузер (`service_call` к `browser`), к файлам — только через встроенные Файлы (функции хоста `fs_*`). Сайты и папки объявляются в манифесте: `sites: [{domain, access}]`, `folders: [{path, access}]` (маски вроде `*.example.org` допустимы) — и действуют только в пересечении со списками доступа владельца (его Браузер и Файлы). Что сверх манифеста — хост не пропустит.
+- Исходники открыты, лицензия совместима с AGPL-3.0 (рекомендуем AGPL-3.0 или пермиссивную).
 - Имя репозитория — `gate4ai-<имя>` (коннектор в корне или в каталоге — тогда `--path`); `version` в `manifest.yaml` растёт с каждым выпуском, тег — `v<version>`.
 - Возможности в манифесте — минимально нужные: каждую увидит владелец при установке и ревьюер в pull request.
 
@@ -61,7 +61,7 @@ gate4ai registry add index.json pack.json --publisher acme \
 
 `--repo`, `--path` (каталог коннектора, если не корень), `--license` и `--description` нужны только для нового коннектора; адрес пакета по умолчанию — релиз `v<version>` на GitHub (иначе `--url`). Новый издатель попадает в индекс с уровнем `community` и ключом, которым подписан пакет. `index.json.sig` не меняйте.
 
-CI pull request'а скачивает каждый пакет и сверяет его с записью, а новые версии пересобирает из тега `v<version>` (в каталоге `path`) и сравнивает с опубликованным пакетом. CI работает той версией gate4ai, что записана в `.github/gate4ai-version` (её обновляет релиз gate4ai), а не `@latest`; соберите пакет той же или совместимой версией. Ещё CI проверяет, что в индексе есть официальные коннекторы gate4ai (`email`, `browser`) с версией этого релиза. У нативного пакета запись ссылается на список платформ `<connector>-<version>.platforms.json`, и CI пересобирает пакет под каждую платформу списка.
+CI pull request'а скачивает каждый пакет и сверяет его с записью, а новые версии пересобирает из тега `v<version>` (в каталоге `path`) и сравнивает с опубликованным пакетом. CI работает той версией gate4ai, что записана в `.github/gate4ai-version` (её обновляет релиз gate4ai), а не `@latest`; соберите пакет той же или совместимой версией.
 
 ## 5. Ревью и уровни доверия
 

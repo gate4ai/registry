@@ -18,37 +18,13 @@
       "description": "Pages in the user's dedicated Chrome profile; browser sessions for agents and page actions for other connectors",
       "versions": [
         {
-          "version": "0.7.4",
-          "url": "https://github.com/gate4ai/gate4ai/releases/download/v0.7.4/browser-0.7.4.platforms.json",
-          "sha256": "da6217074531c997cae60965c963614b6a0aae187e6d14b52571985e0211371f",
-          "digest": "2b1aebfc5a4d06e96f9757ea03e67d9944be24e07e9a5f503ddd9f9b7a7bea8b",
-          "capabilities": [
-            "a call may run up to 120 s",
-            "class write actions: act, fill_secret, login",
-            "reveal the value of ${setting:model_key} to the connector",
-            "runs as a separate program without a sandbox, with your user's rights"
-          ]
-        },
-        {
-          "version": "0.7.5",
-          "url": "https://github.com/gate4ai/gate4ai/releases/download/v0.7.5/browser-0.7.5.platforms.json",
-          "sha256": "152ce68ad98685009abfb62643d52f76945a8dc2c675729534c99f2d1252f8a6",
-          "digest": "85031e03514edc3887c0b80319e2a4b54d2b149fa6f49d2d4fcf09d0ee9efde0",
+          "version": "0.7.8",
+          "url": "https://github.com/gate4ai/gate4ai/releases/download/v0.7.8/browser-0.7.8.platforms.json",
+          "sha256": "bbe7d4b8762307a358a8513abb73157325f7cd71cea352f1248f23f8b706209d",
+          "digest": "73e03f2c823ddc3e8805430dd533ba22cc3925379cb2bd63ec438c84bf010d4a",
           "capabilities": [
             "a call may run up to 600 s",
-            "class write actions: act, fill_secret, login",
-            "reveal the value of ${setting:model_key} to the connector",
-            "runs as a separate program without a sandbox, with your user's rights"
-          ]
-        },
-        {
-          "version": "0.7.6",
-          "url": "https://github.com/gate4ai/gate4ai/releases/download/v0.7.6/browser-0.7.6.platforms.json",
-          "sha256": "ff4f767bc7f15f9fe42e164be29a43a121763786e4966c6d7c10c90e8c60fec9",
-          "digest": "bcf8fc969e78a203dd1dc7744d3cd74a609833618def85185829406329e66bc6",
-          "capabilities": [
-            "a call may run up to 600 s",
-            "class write actions: act, delete, fill_secret, login, patch, post, put",
+            "class write actions: act, delete, dialog, download, fill_secret, login, patch, post, put",
             "reveal the value of ${setting:model_key} to the connector",
             "runs as a separate program without a sandbox, with your user's rights"
           ]
@@ -63,44 +39,10 @@
       "description": "Email over IMAP/SMTP",
       "versions": [
         {
-          "version": "0.7.4",
-          "url": "https://github.com/gate4ai/gate4ai/releases/download/v0.7.4/email-0.7.4.g4c",
-          "sha256": "79937157e7807c84378b3814f150b81fdffae8f3dc9ea26304cff494e83d90d3",
-          "digest": "f2648aba8df1aba9764c19bc69ec32eeedc3470d6d04d1b349645cbc4805dc1e",
-          "capabilities": [
-            "class external actions: send",
-            "class write actions: draft",
-            "network tcp://${setting:imap.host}:${setting:imap.port}",
-            "network tcp://${setting:smtp.host}:${setting:smtp.port}",
-            "network tls://${setting:imap.host}:${setting:imap.port}",
-            "network tls://${setting:smtp.host}:${setting:smtp.port}",
-            "secret ${setting:imap.password} for ${setting:imap.host}",
-            "secret ${setting:imap.password} for ${setting:smtp.host}",
-            "secret ${setting:smtp.password} for ${setting:smtp.host}"
-          ]
-        },
-        {
-          "version": "0.7.5",
-          "url": "https://github.com/gate4ai/gate4ai/releases/download/v0.7.5/email-0.7.5.g4c",
-          "sha256": "8176a1036c37aa51a3da77f4c51ef904215abaf7676a19665d8e47cc2e3d6f3a",
-          "digest": "64edae6f60e4f5d833c1afb9cb6a6ef0dc74618368bbbf70134cdbce8a46aff0",
-          "capabilities": [
-            "class external actions: send",
-            "class write actions: draft",
-            "network tcp://${setting:imap.host}:${setting:imap.port}",
-            "network tcp://${setting:smtp.host}:${setting:smtp.port}",
-            "network tls://${setting:imap.host}:${setting:imap.port}",
-            "network tls://${setting:smtp.host}:${setting:smtp.port}",
-            "secret ${setting:imap.password} for ${setting:imap.host}",
-            "secret ${setting:imap.password} for ${setting:smtp.host}",
-            "secret ${setting:smtp.password} for ${setting:smtp.host}"
-          ]
-        },
-        {
-          "version": "0.7.6",
-          "url": "https://github.com/gate4ai/gate4ai/releases/download/v0.7.6/email-0.7.6.g4c",
-          "sha256": "3346dab55d4a074bf1f1ddd6294b33dfca31ba44da3e6b7e2c932217828a95aa",
-          "digest": "dddd26f43e78bffcf39e1cc8ddf515f0046c007a33ca30686b27abf840c3c2b7",
+          "version": "0.7.8",
+          "url": "https://github.com/gate4ai/gate4ai/releases/download/v0.7.8/email-0.7.8.g4c",
+          "sha256": "74696188288581ec99131b159c228a775ba5cb2c8fb0bc6f37c230f1456f64ff",
+          "digest": "df667d25cef159d2a28d089ff0b397a6baddc5357a4978cfdf6f83a519814457",
           "capabilities": [
             "class external actions: send",
             "class write actions: draft",
